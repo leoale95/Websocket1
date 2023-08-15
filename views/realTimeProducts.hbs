@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-Time Products</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        socket.on('productAdded', (product) => {
+            // Actualizar la lista de productos en tiempo real
+            const productList = document.getElementById('product-list');
+            const productItem = document.createElement('li');
+            productItem.textContent = product.name;
+            productList.appendChild(productItem);
+        });
+    </script>
+</head>
+<body>
+    <h1>Real-Time List of Products</h1>
+    <ul id="product-list">
+        {{#each products}}
+        <li>{{this.name}}</li>
+        {{/each}}
+    </ul>
+    <form id="add-product-form">
+        <input type="text" id="product-name" placeholder="Product Name">
+        <button type="button" onclick="addProduct()">Add Product</button>
+    </form>
+    <script>
+        function addProduct() {
+            const productName = document.getElementById('product-name').value;
+            socket.emit('newProduct', { name: productName });
+        }
+    </script>
+</body>
+</html>
